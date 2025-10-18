@@ -1,0 +1,247 @@
+/* --- General Styles --- */
+body { font-family: 'Roboto', sans-serif; margin: 0; padding: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
+.main-bg { background-image: url('https://i.pinimg.com/1200x/b4/15/a0/b415a0f80440c5ce3dcfccd41943cfc2.jpg'); }
+h1, h2, h3 { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.text-white { color: #fff !important; }
+.btn-success { background: #28a745; border: none; }
+.btn-success:hover { background: #218838; }
+.shadow-lg { box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.form-select, .form-control { border-radius: 10px; }
+
+/* --- Custom Main Title Style --- */
+.main-bg h1.display-4 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #000000 !important; /* Black color */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8); /* White glow for readability */
+}
+
+/* --- General Card Styles (Home Page) --- */
+.row.g-4 { perspective: 1000px; }
+.row.g-4 .card { border: none; border-radius: 15px; overflow: hidden; transition: all 0.4s ease; cursor: pointer; }
+.card-img-container { overflow: hidden; position: relative; }
+.card-img-top { height: 200px; object-fit: cover; }
+.row.g-4 .card-body { padding: 0.75rem 1rem; }
+
+/* --- UNIFIED CARD ANIMATION (Home Page) --- */
+@keyframes flipInX { from { transform: rotateX(90deg); opacity: 0; } to { transform: rotateX(0deg); opacity: 1; } }
+@keyframes scanline { from { top: -10%; } to { top: 110%; } }
+.row.g-4 .col-md-4 .card { opacity: 0; animation: flipInX 0.7s ease-out forwards; }
+.row.g-4 .col-md-4:nth-child(1) .card { animation-delay: 0.2s; }
+.row.g-4 .col-md-4:nth-child(2) .card { animation-delay: 0.4s; }
+.row.g-4 .col-md-4:nth-child(3) .card { animation-delay: 0.6s; }
+.card-img-container::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: rgba(255, 255, 255, 0.7); box-shadow: 0 0 10px #fff, 0 0 20px #fff; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.card:hover .card-img-container::after { opacity: 1; animation: scanline 1.5s linear infinite; }
+.card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+
+/* --- Custom Card Title Styles (Home Page) --- */
+.card-title { font-family: 'Lora', serif; color: #2E7D32; text-transform: uppercase; letter-spacing: 1px; text-shadow: none !important; margin-bottom: 0; }
+
+/* --- Page Exit Animations --- */
+.card.is-exiting { animation: cardZoomIn 0.5s ease-out forwards !important; }
+@keyframes cardZoomIn { from { transform: scale(1); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+#result.show { animation: resultFadeIn 0.5s ease-out; }
+@keyframes resultFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- SHARED MODULE PAGE STYLES --- */
+.bio-page .card-body h2,
+.waste-page .card-body h2,
+.compost-page .card-body h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #FF00FF; /* Magenta color */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.bio-page #result h5,
+.waste-page #result h5,
+.compost-page #result h5 {
+    font-family: 'Playfair Display', serif;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 1.4rem;
+}
+.bio-page #result .recommendation-output,
+.waste-page #result .classification-output,
+.compost-page #result .stage-output {
+    font-family: 'Playfair Display', serif;
+    color: #198754;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.bio-page #result p,
+.waste-page #result p,
+.compost-page #result p {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+@keyframes highlight-label {
+    50% { color: #198754; transform: translateY(-2px); }
+}
+.bio-page .form-label.selection-confirmed,
+.compost-page .form-label.selection-confirmed {
+    animation: highlight-label 0.6s ease-in-out;
+}
+.compost-page #result .try-again-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Waste Page Preview Styles --- */
+#imagePreviewContainer {
+    width: 250px;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    margin: 0 auto;
+    padding: 5px;
+    box-sizing: border-box;
+}
+#imagePreview {
+    max-width: 100%;
+    max-height: 240px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+/* --- Classification Animation Styles --- */
+.classification-icon {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+@keyframes zoomInOut {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.zoom-in-out-green {
+    animation: zoomInOut 1.5s ease-in-out infinite;
+    color: #28a745;
+}
+.zoom-in-out-red {
+    animation: zoomInOut 1.5s ease-in-out infinite;
+    color: #dc3545;
+}
+
+/* --- START: Modified Biofertilizer Suitability Styles --- */
+@keyframes pulse-anim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+/* Common style for all suitability statuses */
+.suitability-suitable,
+.suitability-not-suitable,
+.suitability-moderately-suitable,
+.suitability-less-suitable {
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    display: inline-block;
+    animation: pulse-anim 2s infinite;
+}
+/* Specific colors for each status */
+.suitability-suitable {
+    color: #28a745; /* Green */
+}
+.suitability-not-suitable {
+    color: #dc3545; /* Red */
+}
+.suitability-moderately-suitable {
+    color: #fd7e14; /* Orange */
+}
+.suitability-less-suitable {
+    color: #ffc107; /* Yellow */
+}
+/* --- END: Modified Biofertilizer Suitability Styles --- */
+
+
+/* --- Voice Button --- */
+.voice-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+/* --- Morphing Button --- */
+.btn-morph { position: relative; transition: all 0.4s cubic-bezier(0.6, 0, 0.2, 1); width: 250px !important; }
+.btn-morph .btn-text { transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out; display: inline-block; }
+.btn-morph.is-loading .btn-text, .btn-morph.is-success .btn-text { opacity: 0; transform: translateY(-10px); }
+.btn-morph.is-loading { width: 52px !important; height: 52px; padding: 0; }
+.btn-morph.is-loading::after { content: ''; position: absolute; top: 50%; left: 50%; margin: -12px 0 0 -12px; width: 24px; height: 24px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.5); border-top-color: #fff; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-morph .checkmark { display: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; width: 28px; height: 28px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.btn-morph.is-success { width: 52px !important; height: 52px; background-color: #198754; padding: 0; }
+.btn-morph.is-success .checkmark { display: block; stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw-check 0.4s 0.1s ease-out forwards; }
+@keyframes draw-check { to { stroke-dashoffset: 0; } }
+
+/* --- Weather Styles --- */
+.weather-container {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 900px;
+}
+.current-weather-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+.weather-icon-large {
+    width: 100px;
+    height: 100px;
+    margin-top: -20px;
+}
+.weather-alert {
+    background: rgba(24, 131, 82, 0.5); /* Semi-transparent green */
+    border-left: 5px solid #198754;
+    font-size: 1.1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.forecast-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.weather-icon-small {
+    width: 40px;
+    height: 40px;
+}
+
+/* --- Voice Button Listening Animation --- */
+.voice-btn.is-listening {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px 20px rgba(40, 167, 69, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}

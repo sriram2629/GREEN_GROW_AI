@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ ui.compost_title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="main-bg compost-page" data-page="compost">
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <a href="/?lang={{ lang }}" class="btn btn-primary rounded-pill me-2">{{ ui.home }}</a>
+        <button id="voiceBtn" onclick="toggleVoice()" class="btn rounded-pill voice-btn align-middle"><i class="bi bi-mic-fill"></i></button>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-20 mt-20">
+                <div class="card shadow-lg">
+                    <div class="card-body p-10">
+                        <h2 class="text-center mb-4">{{ ui.compost_title }}</h2>
+                        <form id="compostForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">{{ ui.smell }}</label>
+                                    <select name="smell" class="form-select">
+                                        <option value="0">{{ ui.fresh }}</option>
+                                        <option value="1">{{ ui.ammonia }}</option>
+                                        <option value="2">{{ ui.earthy }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">{{ ui.color }}</label>
+                                    <select name="color" class="form-select">
+                                        <option value="0">{{ ui.mixed }}</option>
+                                        <option value="1">{{ ui.brown }}</option>
+                                        <option value="2">{{ ui.dark }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">{{ ui.heat }}</label>
+                                    <select name="heat" class="form-select">
+                                        <option value="0">{{ ui.low }}</option>
+                                        <option value="1">{{ ui.medium }}</option>
+                                        <option value="2">{{ ui.high }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">{{ ui.moisture }}</label>
+                                    <select name="moisture" class="form-select">
+                                        <option value="0">{{ ui.dry }}</option>
+                                        <option value="1">{{ ui.moist }}</option>
+                                        <option value="2">{{ ui.wet }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ ui.days }}</label>
+                                <select name="days" class="form-select">
+                                    {% for day in ui.days_options %}
+                                    <option value="{{ day }}">{{ day }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="hidden" name="lang" value="{{ lang }}">
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-success rounded-pill py-2 btn-morph">
+                                    <span class="btn-text">{{ ui.track_stage }}</span>
+                                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" d="M20.3 6.7l-11 11-5.3-5.3"/></svg>
+                                </button>
+                            </div>
+                        </form>
+                        <div id="result" class="mt-4 p-3 bg-light rounded text-center" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-5" style="display: none;">
+            <div class="col-md-10">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h3 class="text-center mb-4 text-primary">{{ ui.compost_process_title }}</h3>
+                        <div class="accordion" id="compostAccordion">
+                            <div class="accordion-item" id="Initial">
+                                <h2 class="accordion-header" id="initialHeading">
+                                    <button class="accordion-button">{{ ui.initial_stage_title }}</button>
+                                </h2>
+                                <div id="initialCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">{{ ui.initial_stage_desc }}</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item" id="Mesophilic">
+                                <h2 class="accordion-header" id="mesophilicHeading">
+                                    <button class="accordion-button collapsed">{{ ui.mesophilic_stage_title }}</button>
+                                </h2>
+                                <div id="mesophilicCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">{{ ui.mesophilic_stage_desc }}</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item" id="Thermophilic">
+                                <h2 class="accordion-header" id="thermophilicHeading">
+                                    <button class="accordion-button collapsed">{{ ui.thermophilic_stage_title }}</button>
+                                </h2>
+                                <div id="thermophilicCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">{{ ui.thermophilic_stage_desc }}</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item" id="Cooling">
+                                <h2 class="accordion-header" id="coolingHeading">
+                                    <button class="accordion-button collapsed">{{ ui.cooling_stage_title }}</button>
+                                </h2>
+                                <div id="coolingCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">{{ ui.cooling_stage_desc }}</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item" id="Mature">
+                                <h2 class="accordion-header" id="matureHeading">
+                                    <button class="accordion-button collapsed">{{ ui.mature_stage_title }}</button>
+                                </h2>
+                                <div id="matureCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">{{ ui.mature_stage_desc }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- SELECTION ANIMATION ---
+        const selects = document.querySelectorAll('.form-select');
+        selects.forEach(select => {
+            select.addEventListener('change', () => {
+                const label = select.previousElementSibling;
+                if (label && label.classList.contains('form-label')) {
+                    label.classList.add('selection-confirmed');
+                    label.addEventListener('animationend', () => {
+                        label.classList.remove('selection-confirmed');
+                    }, { once: true });
+                }
+            });
+        });
+
+        // --- SUBMIT ANIMATION & FETCH LOGIC ---
+        const stageLabel = '{{ ui.stage }}';
+        document.getElementById('compostForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const form = e.target;
+            const button = form.querySelector('.btn-morph');
+            const resultDiv = document.getElementById('result');
+
+            if (button.classList.contains('is-loading')) return;
+
+            button.disabled = true;
+            button.classList.add('is-loading');
+            resultDiv.style.display = 'none';
+            resultDiv.classList.remove('show');
+
+            const revertButton = () => {
+                button.classList.remove('is-success', 'is-loading');
+                button.disabled = false;
+            };
+
+            const formData = new FormData(form);
+            setTimeout(() => {
+                fetch('/compost', {method: 'POST', body: formData})
+                    .then(res => res.json())
+                    .then(data => {
+                        button.classList.remove('is-loading');
+                        button.classList.add('is-success');
+
+                        const infoContainer = document.getElementById(data.stage_key);
+                        const infoTitle = infoContainer.querySelector('.accordion-button').textContent.trim();
+                        const infoDescription = infoContainer.querySelector('.accordion-body').textContent.trim();
+                        
+                        resultDiv.innerHTML = `
+                            <h5>${stageLabel}: <span class="stage-output">${data.stage}</span></h5>
+                            <div class="mt-4 text-start border-top pt-3">
+                                <h6 class="fw-bold">${infoTitle}</h6>
+                                <p class="text-muted small">${infoDescription}</p>
+                            </div>
+                        `;
+                        speak(`${data.stage}. ${infoDescription}`);
+
+                        setTimeout(() => {
+                            revertButton();
+                            resultDiv.style.display = 'block';
+                            resultDiv.classList.add('show');
+                        }, 1800);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        resultDiv.innerHTML = `<p class="text-danger">{{ ui.error_fetch }}</p>`;
+                        revertButton();
+                        resultDiv.style.display = 'block';
+                        resultDiv.classList.add('show');
+                    });
+            }, 800);
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
