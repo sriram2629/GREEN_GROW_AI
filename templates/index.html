@@ -18,7 +18,8 @@
             <p class="lead text-white mb-4">{{ ui.choose_module }}</p>
 
             <div class="row justify-content-center g-4 px-3">
-                <div class="col-md-4" id="bio-card-container">
+                <!-- Biofertilizer Module -->
+                <div class="col-md-4">
                     <a href="https://green-grow-ai-a6q3.onrender.com/biofertilizer?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card bio-card h-100 shadow-lg">
                             <div class="card-img-container">
@@ -30,8 +31,9 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4" id="waste-card-container">
-                   <a href="https://green-grow-ai-a6q3.onrender.com/waste?lang={{ lang }}" class="text-decoration-none module-link">
+                <!-- Waste Module -->
+                <div class="col-md-4">
+                    <a href="https://green-grow-ai-a6q3.onrender.com/waste?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card waste-card h-100 shadow-lg">
                             <div class="card-img-container">
                                 <img src="{{ url_for('static', filename='images/waste.png') }}" class="card-img-top" alt="{{ ui.waste_title }}">
@@ -42,10 +44,11 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-md-4" id="compost-card-container">
-                   <a href="https://green-grow-ai-a6q3.onrender.com/compost?lang={{ lang }}" class="text-decoration-none module-link">
+                <!-- Compost Module -->
+                <div class="col-md-4">
+                    <a href="https://green-grow-ai-a6q3.onrender.com/compost?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card compost-card h-100 shadow-lg">
-                             <div class="card-img-container">
+                            <div class="card-img-container">
                                 <img src="{{ url_for('static', filename='images/compost.png') }}" class="card-img-top" alt="{{ ui.compost_title }}">
                             </div>
                             <div class="card-body text-center">
@@ -56,10 +59,12 @@
                 </div>
             </div>
 
+            <!-- Weather Info -->
             <div id="weather-container" class="weather-container text-white mt-5 mx-auto p-4 rounded shadow-lg">
                 <p id="weather-status" class="lead">{{ ui.fetching_location }}</p>
             </div>
 
+            <!-- Language & Voice -->
             <div class="mt-5 d-flex justify-content-center align-items-center">
                 <select id="langSelect" class="form-select w-25 me-3" onchange="changeLang()">
                     <option value="en" {% if lang == 'en' %}selected{% endif %}>{{ ui.english }}</option>
@@ -70,9 +75,11 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    
+
+    <!-- Weather JS -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             initializeWeather();
@@ -84,39 +91,20 @@
                 statusDiv.textContent = 'Geolocation is not supported by your browser.';
                 return;
             }
-
-            const success = (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                fetchWeather(lat, lon);
-            };
-
-            const error = () => {
-                statusDiv.textContent = "{{ ui.location_denied }}";
-            };
-
-            navigator.geolocation.getCurrentPosition(success, error);
+            navigator.geolocation.getCurrentPosition(
+                position => fetchWeather(position.coords.latitude, position.coords.longitude),
+                () => { statusDiv.textContent = "{{ ui.location_denied }}"; }
+            );
         }
 
         function fetchWeather(lat, lon) {
             const lang = document.documentElement.lang || 'en';
             const weatherContainer = document.getElementById('weather-container');
-
-           fetch(`https://green-grow-ai-a6q3.onrender.com/weather?lat=${lat}&lon=${lon}&lang=${lang}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Server error: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.error) {
-                       throw new Error(data.error);
-                    }
-                    updateWeatherUI(data);
-                })
+            fetch(`https://green-grow-ai-a6q3.onrender.com/weather?lat=${lat}&lon=${lon}&lang=${lang}`)
+                .then(res => res.ok ? res.json() : Promise.reject(`Server error: ${res.statusText}`))
+                .then(data => { if (data.error) throw new Error(data.error); updateWeatherUI(data); })
                 .catch(err => {
-                    weatherContainer.innerHTML = `<p class="text-danger">Could not fetch weather data. ${err.message}</p>`;
+                    weatherContainer.innerHTML = `<p class="text-danger">Could not fetch weather data. ${err}</p>`;
                     console.error('Weather fetch error:', err);
                 });
         }
@@ -124,14 +112,13 @@
         function updateWeatherUI(data) {
             const weatherContainer = document.getElementById('weather-container');
             const lang = document.documentElement.lang || 'en';
-            const ui = {
+            const uiLabels = {
                 'en': { humidity: 'Humidity', wind: 'Wind', forecast: '5-Day Forecast', alerts: "Today's Weather & Farming Alerts" },
                 'te': { humidity: 'తేమ', wind: 'గాలి', forecast: '5-రోజుల సూచన', alerts: 'నేటి వాతావరణం & వ్యవసాయ హెచ్చరికలు' },
                 'hi': { humidity: 'नमी', wind: 'हवा', forecast: '5-दिन का पूर्वानुमान', alerts: 'आज का मौसम और कृषि अलर्ट' }
             };
 
-            let alertsHtml = data.alerts.map(alert => `<p class="mb-1">${alert}</p>`).join('');
-            
+            let alertsHtml = data.alerts.map(a => `<p class="mb-1">${a}</p>`).join('');
             let forecastHtml = data.forecast.map(day => `
                 <div class="col">
                     <div class="forecast-card text-center p-2">
@@ -139,33 +126,33 @@
                         <img src="https://openweathermap.org/img/wn/${day.icon}.png" alt="${day.description}" class="weather-icon-small">
                         <p class="mb-0">${Math.round(day.temp)}°C</p>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             weatherContainer.innerHTML = `
-                <h3 class="mb-4">${ui[lang].alerts} in ${data.current.city}</h3>
-                
+                <h3 class="mb-4">${uiLabels[lang].alerts} in ${data.current.city}</h3>
                 <div class="row align-items-center mb-4">
                     <div class="col-md-6">
                         <div class="current-weather-card p-3 text-center">
                             <img src="https://openweathermap.org/img/wn/${data.current.icon}@2x.png" alt="${data.current.description}" class="weather-icon-large">
                             <h2 class="display-3">${Math.round(data.current.temp)}°C</h2>
                             <p class="lead text-capitalize">${data.current.description}</p>
-                            <p>${ui[lang].humidity}: ${data.current.humidity}% | ${ui[lang].wind}: ${data.current.wind.toFixed(1)} m/s</p>
+                            <p>${uiLabels[lang].humidity}: ${data.current.humidity}% | ${uiLabels[lang].wind}: ${data.current.wind.toFixed(1)} m/s</p>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="weather-alert p-3 rounded">
-                            ${alertsHtml}
-                        </div>
+                        <div class="weather-alert p-3 rounded">${alertsHtml}</div>
                     </div>
                 </div>
-
-                <h4 class="mt-4 mb-3">${ui[lang].forecast}</h4>
-                <div class="row row-cols-5 g-2">
-                    ${forecastHtml}
-                </div>
+                <h4 class="mt-4 mb-3">${uiLabels[lang].forecast}</h4>
+                <div class="row row-cols-5 g-2">${forecastHtml}</div>
             `;
+        }
+
+        function changeLang() {
+            const lang = document.getElementById('langSelect').value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url.toString();
         }
     </script>
 </body>
