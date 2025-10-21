@@ -19,7 +19,7 @@
 
             <div class="row justify-content-center g-4 px-3">
                 <div class="col-md-4" id="bio-card-container">
-                    <a href="/biofertilizer?lang={{ lang }}" class="text-decoration-none module-link">
+                    <a href="https://green-grow-ai-a6q3.onrender.com/biofertilizer?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card bio-card h-100 shadow-lg">
                             <div class="card-img-container">
                                 <img src="{{ url_for('static', filename='images/biofertilizer.png') }}" class="card-img-top" alt="{{ ui.bio_title }}">
@@ -31,7 +31,7 @@
                     </a>
                 </div>
                 <div class="col-md-4" id="waste-card-container">
-                    <a href="/waste?lang={{ lang }}" class="text-decoration-none module-link">
+                   <a href="https://green-grow-ai-a6q3.onrender.com/waste?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card waste-card h-100 shadow-lg">
                             <div class="card-img-container">
                                 <img src="{{ url_for('static', filename='images/waste.png') }}" class="card-img-top" alt="{{ ui.waste_title }}">
@@ -43,7 +43,7 @@
                     </a>
                 </div>
                 <div class="col-md-4" id="compost-card-container">
-                    <a href="/compost?lang={{ lang }}" class="text-decoration-none module-link">
+                   <a href="https://green-grow-ai-a6q3.onrender.com/compost?lang={{ lang }}" class="text-decoration-none module-link">
                         <div class="card compost-card h-100 shadow-lg">
                              <div class="card-img-container">
                                 <img src="{{ url_for('static', filename='images/compost.png') }}" class="card-img-top" alt="{{ ui.compost_title }}">
@@ -102,7 +102,7 @@
             const lang = document.documentElement.lang || 'en';
             const weatherContainer = document.getElementById('weather-container');
 
-           fetch(`${window.location.origin}/weather?lat=${lat}&lon=${lon}&lang=${lang}`)
+           fetch(`https://green-grow-ai-a6q3.onrender.com/weather?lat=${lat}&lon=${lon}&lang=${lang}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Server error: ${response.statusText}`);
