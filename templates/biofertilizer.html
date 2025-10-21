@@ -91,7 +91,7 @@
 
             const formData = new FormData(form);
             setTimeout(() => {
-                fetch('/biofertilizer', {method: 'POST', body: formData})
+                fetch('https://green-grow-ai-a6q3.onrender.com/biofertilizer', {method: 'POST', body: formData})
                     .then(res => res.json())
                     .then(data => {
                         button.classList.remove('is-loading');
